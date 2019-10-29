@@ -50,7 +50,8 @@ RUN apt-get update && apt-get install -y \
 
 # Add chromium user
 RUN groupadd -r chromium && useradd -r -g chromium -G audio,video chromium \
-    && mkdir -p /home/chromium/Downloads && chown -R chromium:chromium /home/chromium
+    && mkdir -p /home/chromium/Downloads && chown -R chromium:chromium /home/chromium \
+    && mkdir -p /home/chromium/data && chown -R chromium:chromium /home/chromium/data
 RUN echo "chromium ALL=(ALL) NOPASSWD: /usr/sbin/openvpn" >> /etc/sudoers
 
 RUN adduser chromium sudo
@@ -63,4 +64,4 @@ RUN chmod 400 /home/chromium/creds.txt
 USER chromium
 
 ENTRYPOINT ["/bin/bash", "-c", "sudo openvpn --config /home/chromium/proton.ovpn --daemon && \
-                                /usr/bin/chromium --user-data-dir=/data" ]
+                                /usr/bin/chromium --user-data-dir=/home/chromium/data" ]
